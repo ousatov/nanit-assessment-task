@@ -1,0 +1,25 @@
+*.iml
+.gradle
+/local.properties
+.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+## Gradle / Android
+.gradle/
+**/build/
+
+## OS / IDE misc
+Thumbs.db
+
+## Keystore & credentials
+*.jks
+*.keystore
+
+## Logs & temp
+*.log
+*.tmp

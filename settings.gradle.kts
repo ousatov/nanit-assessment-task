@@ -20,5 +20,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "NanitHomeTask"
-include(":app")
- 
+include(
+    ":app",
+    ":core:common",
+    ":core:network",
+    ":core:db",
+    ":core:di"
+)

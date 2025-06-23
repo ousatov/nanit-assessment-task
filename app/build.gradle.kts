@@ -10,6 +10,13 @@ plugins {
 android {
     namespace = "com.usatov.nanithometask"
     compileSdk = libs.versions.compileSdk.get().toInt()
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
 
     defaultConfig {
         applicationId = "com.usatov.nanithometask"
@@ -39,15 +46,23 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:connect"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation(libs.hilt.nav.compose)
-}
 
+    implementation(platform(libs.compose.bom))
+
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
+    implementation(libs.activity.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+}
 
 data class Version(val major: Int, val minor: Int, val bugfix: Int, val build: Int)
 

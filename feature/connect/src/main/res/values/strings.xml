@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_connecting">Connecting…</string>
+    <string name="status_connected">Connected!</string>
+    <string name="status_error">IP / port can’t be empty</string>
+    <string name="hint_ip">IP address</string>
+    <string name="hint_port">Port</string>
+    <string name="btn_connect">Connect</string>
+    <string name="hello_nanit_title">Hello Nanit Reviewer!</string>
+    <string name="ip_address_hint">IP address</string>
+    <string name="port_hint">Port</string>
+</resources>

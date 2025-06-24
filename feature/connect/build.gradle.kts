@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.hilt.android)
+    implementation(project(":core:common"))
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.nav.compose)
 

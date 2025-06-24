@@ -18,7 +18,10 @@ activityCompose = "1.8.2"
 navigationCompose = "2.7.7"
 composeCompiler = "1.5.14"
 lifecycleCompose = "2.8.3"
-
+okhttp = "4.12.0"
+room = "2.6.1"
+serialization = "1.6.3" #only 1.6.xxx works with kotlin 1.9.xx
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,7 +40,13 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt" }
@@ -46,3 +55,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

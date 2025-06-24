@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
@@ -20,6 +21,13 @@ android {
 
 dependencies {
     implementation(project(":domain:connect-api"))
+    implementation(project(":core:db"))
+
     implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.hilt.android); kapt(libs.hilt.compiler)
+    implementation(libs.hilt.android)
+    implementation(project(":core:di"))
+    ; kapt(libs.hilt.compiler)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
 }

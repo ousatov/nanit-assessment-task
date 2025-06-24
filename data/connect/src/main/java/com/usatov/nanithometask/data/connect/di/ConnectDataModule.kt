@@ -1,21 +1,23 @@
 package com.usatov.nanithometask.data.connect.di
 
 import com.usatov.nanithometask.data.connect.ConnectRepositoryImpl
-import com.usatov.nanithometask.data.connect.FakeSocketDataSource
 import com.usatov.nanithometask.data.connect.SocketDataSource
+import com.usatov.nanithometask.data.connect.SocketDataSourceImpl
 import com.usatov.nanithometask.domain.connect.ConnectRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface ConnectDataModule {
 
     @Binds
-    fun bindRepo(impl: ConnectRepositoryImpl): ConnectRepository
+    @Singleton
+    fun bindConnectRepository(impl: ConnectRepositoryImpl): ConnectRepository
 
     @Binds
-    fun bindSocket(ds: FakeSocketDataSource): SocketDataSource
+    fun bindSocketDataSource(ds: SocketDataSourceImpl): SocketDataSource
 }

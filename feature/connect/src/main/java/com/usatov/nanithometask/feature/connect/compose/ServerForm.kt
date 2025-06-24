@@ -26,14 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.usatov.nanithometask.feature.connect.R
 import com.usatov.nanithometask.feature.connect.ui.NanitColors
 
-private const val MAX_IP_LENGTH = 15
-private const val MAX_PORT_LENGTH = 5
-
-private const val MAX_PORT_VALUE = 65535
-private const val MIN_PORT_VALUE = 1
-
-private val ipPartialRegex = Regex("""^(\d{1,3}(\.\d{0,3}){0,3})?$""")
-
 @Composable
 fun ServerForm(
     ip: String,
@@ -41,31 +33,33 @@ fun ServerForm(
     onIp: (String) -> Unit,
     onPort: (String) -> Unit,
     modifier: Modifier = Modifier,
-    focusManager: FocusManager = LocalFocusManager.current,
+    focusManager: FocusManager = LocalFocusManager.current
 ) {
     val borderColor = NanitColors.Purple.copy(alpha = 0.35f)
 
     Column(
         modifier
-            .fillMaxWidth()
             .background(NanitColors.Card, RoundedCornerShape(16.dp))
-            .padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Enter server details",
+            text = stringResource(R.string.hello_nanit_title),
             color = NanitColors.Purple,
             style = MaterialTheme.typography.titleMedium
         )
 
         OutlinedTextField(
             value = TextFieldValue(ip, TextRange(ip.length)),
-            onValueChange = checkAndFormatEnteredIp(ip, onIp),
+            onValueChange = { tfv -> onIp(tfv.text) },
             label = { Text(stringResource(R.string.ip_address_hint)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
             ),
-            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+            ),
             singleLine = true,
             shape = RoundedCornerShape(Dimens.cornerRadiusServerForm),
             modifier = Modifier.fillMaxWidth(),
@@ -79,12 +73,15 @@ fun ServerForm(
 
         OutlinedTextField(
             value = port,
-            onValueChange = checkEnteredPort(onPort),
+            onValueChange = { raw -> onPort(raw) },
             label = { Text(stringResource(R.string.port_hint)) },
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }
+            ),
             singleLine = true,
             shape = RoundedCornerShape(Dimens.cornerRadiusServerForm),
             modifier = Modifier.fillMaxWidth(),
@@ -95,63 +92,5 @@ fun ServerForm(
                 unfocusedLabelColor = borderColor
             )
         )
-    }
-}
-
-
-private fun checkEnteredPort(onPort: (String) -> Unit) = { raw: String ->
-    val digits = raw.filter { it.isDigit() }
-    val limited = digits.take(MAX_PORT_LENGTH)
-
-    val accept = when {
-        limited.isEmpty() -> true
-        limited.length < MAX_PORT_LENGTH -> true
-        else -> {
-            val num = limited.toInt()
-            num in MIN_PORT_VALUE..MAX_PORT_VALUE
-        }
-    }
-
-    if (accept) {
-        onPort(limited)
-    }
-}
-
-
-private fun checkAndFormatEnteredIp(
-    ip: String,
-    onIp: (String) -> Unit
-) = { tfv: TextFieldValue ->
-    var raw = tfv.text
-
-    if (ip.endsWith('.') && ip.length - raw.length == 1) {
-        raw = raw.dropLast(1)
-    }
-
-    val sb = StringBuilder()
-    var segLen = 0
-    var dotCount = 0
-
-    raw.forEach { ch ->
-        when {
-            ch.isDigit() && segLen < 3 -> {
-                sb.append(ch)
-                segLen++
-            }
-
-            ch == '.' && segLen > 0 && dotCount < 3 -> {
-                sb.append('.')
-                dotCount++; segLen = 0
-            }
-        }
-    }
-
-    if (segLen == 3 && dotCount < 3) {
-        sb.append('.')
-    }
-
-    val formatted = sb.toString()
-    if (ipPartialRegex.matches(formatted)) {
-        onIp(formatted)
     }
 }

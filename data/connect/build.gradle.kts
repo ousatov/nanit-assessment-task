@@ -22,10 +22,11 @@ android {
 dependencies {
     implementation(project(":domain:connect-api"))
     implementation(project(":core:db"))
+    implementation(project(":core:di"))
+    implementation(project(":core:common"))
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.hilt.android)
-    implementation(project(":core:di"))
     ; kapt(libs.hilt.compiler)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)

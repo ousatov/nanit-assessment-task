@@ -11,4 +11,6 @@
     <string name="ip_address_hint">IP address</string>
     <string name="port_hint">Port</string>
     <string name="btn_done">Done</string>
+    <string name="incorrect_format_ip">Incorrect format of IP address</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

@@ -17,4 +17,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+
+    // SIMPLIFIED. SHOULD BE IN ANOTHER MODULE
+    implementation(libs.timber)
 }

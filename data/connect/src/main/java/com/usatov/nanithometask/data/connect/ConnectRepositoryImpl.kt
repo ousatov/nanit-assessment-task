@@ -1,6 +1,7 @@
 package com.usatov.nanithometask.data.connect
 
-import android.util.Log
+import com.usatov.nanithometask.core.common.TAG
+import com.usatov.nanithometask.core.common.logging.Logger
 import com.usatov.nanithometask.core.db.birthday.LocalBirthdayDataSource
 import com.usatov.nanithometask.core.di.IoDispatcher
 import com.usatov.nanithometask.domain.connect.ConnectRepository
@@ -25,6 +26,7 @@ class ConnectRepositoryImpl @Inject constructor(
     private val socket: SocketDataSource,
     private val local: LocalBirthdayDataSource,
     private val json: Json,
+    private val logger: Logger,
     @IoDispatcher private val io: CoroutineDispatcher
 ) : ConnectRepository {
 
@@ -35,6 +37,10 @@ class ConnectRepositoryImpl @Inject constructor(
     private var socketJob: Job? = null
 
     override suspend fun connect(ip: String, port: Int) = withContext(io) {
+        logger.d(
+            TAG,
+            "connect() ip = $ip port = $port socketJob?.isActive = ${socketJob?.isActive}"
+        )
         if (socketJob?.isActive == true) {
             return@withContext
         }
@@ -44,26 +50,31 @@ class ConnectRepositoryImpl @Inject constructor(
             runCatching {
                 socket.subscribe(ip, port)
                     .withIndex()
-                    .collect { (idx, s) -> handleSocketEvent(idx, s) }
+                    .collect { (idx, s) ->
+                        logger.d(TAG, "collect() idx = $idx s = $s")
+                        handleSocketEvent(idx, s)
+                    }
             }.onFailure { e ->
+                logger.e(TAG, "onFailure() e = $e")
                 _state.value = SessionState.Error(e)
             }
         }.also { job -> job.invokeOnCompletion { socketJob = null } }
     }
 
     override suspend fun disconnect() = withContext(io) {
+        logger.d(TAG, "disconnect()")
         socketJob?.cancelAndJoin()
         socketJob = null
         _state.value = SessionState.Disconnected
     }
 
-    private suspend fun handleSocketEvent(idx: Int, s: SocketState) {
-        Log.d("REPOSITORY", "state = $s")
-        when (s) {
+    private suspend fun handleSocketEvent(idx: Int, state: SocketState) {
+        logger.d(TAG, "handleSocketEvent() idx = $idx state = $state")
+        when (state) {
             is SocketState.Connected -> _state.value = SessionState.Connected
             is SocketState.Disconnected -> _state.value = SessionState.Disconnected
-            is SocketState.Error -> _state.value = SessionState.Error(s.throwable)
-            is SocketState.Data -> handlePayload(idx, s.payload)
+            is SocketState.Error -> _state.value = SessionState.Error(state.throwable)
+            is SocketState.Data -> handlePayload(idx, state.payload)
         }
     }
 
@@ -79,12 +90,12 @@ class ConnectRepositoryImpl @Inject constructor(
             return
         }
 
-        Log.d("US_11", "raw = $raw")
+        logger.d(TAG, "handlePayload() raw = $raw")
         runCatching { json.decodeFromString<BirthdayDto>(raw) }
-            .onFailure { Log.e("US_11", "decode error", it) }
+            .onFailure { logger.e("decode error = ", it) }
             .getOrNull()
             ?.let { dto ->
-                Log.d("US_11", "saved = ${dto.toEntity()}")
+                logger.d(TAG, "handlePayload() saved into DB = ${dto.toEntity()}")
                 local.save(dto.toEntity())
                 local.deleteOlderExceptLast(KEEP)
             }

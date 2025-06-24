@@ -1,7 +1,7 @@
 package com.usatov.nanithometask.data.connect
 
-import android.util.Log
-import com.usatov.nanithometask.domain.connect.SessionState
+import com.usatov.nanithometask.core.common.TAG
+import com.usatov.nanithometask.core.common.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -17,37 +17,39 @@ import javax.inject.Singleton
 
 @Singleton
 class SocketDataSourceImpl @Inject constructor(
-    private val okHttpClient: OkHttpClient
+    private val okHttpClient: OkHttpClient,
+    private val logger: Logger
 ) : SocketDataSource {
 
     private var webSocket: WebSocket? = null
 
     override fun subscribe(ip: String, port: Int): Flow<SocketState> = callbackFlow {
+        logger.d(TAG, "subscribe: ip = $ip port = $port")
         val request = Request.Builder()
             .url("ws://$ip:$port/nanit")
             .build()
 
         val listener = object : WebSocketListener() {
             override fun onOpen(ws: WebSocket, response: Response) {
-                Log.d("US77", "WS onOpen -> $response")
+                logger.d(TAG, "onOpen -> $response")
                 trySend(SocketState.Connected).isSuccess
                 ws.send(REQUEST_WORD)
                 webSocket = ws
             }
 
             override fun onMessage(ws: WebSocket, text: String) {
-                Log.d("US77", "WS onMessage -> $text")
+                logger.d(TAG, "onMessage -> $text")
                 trySend(SocketState.Data(text)).isSuccess
             }
 
             override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
-                Log.d("US77", "WS onFailure -> $t")
+                logger.d(TAG, "onFailure -> $t")
                 trySend(SocketState.Error(t)).isSuccess
                 close(t)
             }
 
             override fun onClosed(ws: WebSocket, code: Int, reason: String) {
-                Log.d("US77", "WS onClosed -> $reason")
+                logger.d(TAG, "onClosed -> $reason")
                 trySend(SocketState.Disconnected).isSuccess
                 close()
             }

@@ -3,9 +3,12 @@ package com.usatov.nanithometask.feature.connect
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.usatov.nanithometask.core.common.TAG
 import com.usatov.nanithometask.core.common.formatIp
 import com.usatov.nanithometask.core.common.formatPort
 import com.usatov.nanithometask.core.common.isValidIp
+import com.usatov.nanithometask.core.common.logging.Logger
+import com.usatov.nanithometask.core.common.resources.ResourceProvider
 import com.usatov.nanithometask.core.di.IoDispatcher
 import com.usatov.nanithometask.domain.connect.ConnectUseCase
 import com.usatov.nanithometask.domain.connect.DisconnectUseCase
@@ -23,12 +26,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class ConnectViewModel @Inject constructor(
     private val connectUseCase: ConnectUseCase,
     private val disconnectUseCase: DisconnectUseCase,
     private val subscribeUseCase: SubscribeConnectStateUseCase,
+    private val resourceProvider: ResourceProvider,
+    private val logger: Logger,
     @IoDispatcher private val io: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -43,6 +49,7 @@ class ConnectViewModel @Inject constructor(
     }
 
     fun onEvent(event: ConnectEvent) {
+        logger.d(TAG, "event = $event")
         when (event) {
             is ConnectEvent.IpChanged -> {
                 viewModelScope.launch(io) {
@@ -80,7 +87,7 @@ class ConnectViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             status = ConnectUiState.Status.Error,
-                            errorMessage = "Incorrect format of IP address"
+                            errorMessage = resourceProvider.getString(R.string.incorrect_format_ip)
                         )
                     }
                     return
@@ -97,7 +104,7 @@ class ConnectViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 status = ConnectUiState.Status.Error,
-                                errorMessage = e.message ?: "Unknown error"
+                                errorMessage = e.message ?: resourceProvider.getString(R.string.unknown_error)
                             )
                         }
                     }
@@ -110,7 +117,7 @@ class ConnectViewModel @Inject constructor(
     }
 
     private fun applySessionState(state: SessionState) {
-        Log.d("VIEWMODEL", "2 state = $state")
+        logger.d(TAG,"applySessionState() state = $state")
         when (state) {
             SessionState.Connecting ->
                 _state.update { it.copy(status = ConnectUiState.Status.Connecting) }
@@ -119,7 +126,7 @@ class ConnectViewModel @Inject constructor(
                 _state.update { it.copy(status = ConnectUiState.Status.Connected) }
 
             is SessionState.Error ->
-                emitError(state.throwable.message ?: "Unknown error")
+                emitError(state.throwable.message ?: resourceProvider.getString(R.string.unknown_error))
 
             is SessionState.Disconnected -> {
                 _state.update { it.copy(status = ConnectUiState.Status.Idle) }
@@ -128,6 +135,7 @@ class ConnectViewModel @Inject constructor(
     }
 
     private fun emitError(msg: String?) {
+        logger.d(TAG,"emitError() = $msg")
         _state.update {
             it.copy(
                 status = ConnectUiState.Status.Error,
@@ -137,6 +145,7 @@ class ConnectViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        logger.d(TAG,"onCleared()")
         viewModelScope.launch(io) {
             disconnectUseCase()
         }

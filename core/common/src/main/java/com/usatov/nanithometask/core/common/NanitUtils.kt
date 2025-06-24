@@ -60,3 +60,6 @@ fun String.formatPort(current: String): String {
 }
 
 fun String.isValidIp() = IP_REGEX.matches(this)
+
+inline val <reified T> T.TAG: String
+    get() = T::class.simpleName?.take(23) ?: "Anonymous"

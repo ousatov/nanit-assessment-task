@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,21 +24,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.usatov.nanithometask.core.navigation.LocalNavController
+import com.usatov.nanithometask.core.navigation.NavRoutes
 import com.usatov.nanithometask.feature.connect.ConnectEvent
 import com.usatov.nanithometask.feature.connect.ConnectUiState
 import com.usatov.nanithometask.feature.connect.ConnectViewModel
+import com.usatov.nanithometask.feature.connect.NavCmd
 import com.usatov.nanithometask.feature.connect.R
 import com.usatov.nanithometask.feature.connect.ui.NanitColors
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
 fun ConnectScreen(
+    onDone: () -> Unit,
     modifier: Modifier = Modifier,
-    vm: ConnectViewModel = hiltViewModel(),
+    vm: ConnectViewModel = hiltViewModel()
 ) {
     val ui by vm.state.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val nav = LocalNavController.current
 
+    LaunchedEffect(Unit) {
+        vm.navigation.collectLatest { cmd ->
+            if (cmd is NavCmd.ToBirthday) {
+                nav.navigate(NavRoutes.BIRTHDAY)
+            }
+        }
+    }
     Column(
         modifier
             .fillMaxSize()

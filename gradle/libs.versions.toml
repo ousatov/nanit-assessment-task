@@ -22,6 +22,10 @@ okhttp = "4.12.0"
 room = "2.6.1"
 serialization = "1.6.3" #only 1.6.xxx works with kotlin 1.9.xx
 timber = "5.0.1"
+junitJunit = "4.13.2"
+androidxJunit = "1.2.1"
+espressoCore = "3.6.1"
+constraintlayout = "2.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +51,10 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [plugins]
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt" }

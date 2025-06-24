@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.usatov.nanithometask.feature.connect"
+    namespace = "com.usatov.nanithometask.feature.birthday"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig { minSdk = libs.versions.minSdk.get().toInt() }
 
@@ -27,17 +27,19 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain:connect-api"))
-    implementation(project(":data:connect"))
+
+    implementation(project(":domain:birthday-api"))
+    implementation(project(":data:birthday"))
     implementation(project(":core:di"))
-    implementation(project(":core:common"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:common"))
 
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.constraintlayout)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.nav.compose)
 

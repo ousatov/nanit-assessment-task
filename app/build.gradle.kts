@@ -47,8 +47,11 @@ android {
 
 dependencies {
     implementation(project(":feature:connect"))
+    implementation(project(":feature:birthday"))
     implementation(project(":core:common"))
     implementation(project(":core:di"))
+    implementation(project(":core:navigation"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

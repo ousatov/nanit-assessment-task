@@ -18,9 +18,8 @@ rootProject.name = "NanitHomeTask"
 
 include(
     ":app",
-    ":core:common", ":core:network", ":core:db", ":core:di",
-    ":core:ui",
-    ":domain:connect-api",
-    ":data:connect",
-    ":feature:connect",
+    ":core:common", ":core:network", ":core:db", ":core:di", ":core:ui", ":core:navigation",
+    ":domain:connect-api", ":domain:birthday-api",
+    ":data:connect", ":data:birthday",
+    ":feature:connect", ":feature:birthday",
 )

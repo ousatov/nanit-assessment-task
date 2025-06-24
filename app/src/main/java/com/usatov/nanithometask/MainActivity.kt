@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import com.usatov.nanithometask.feature.connect.compose.ConnectScreen
+import com.usatov.nanithometask.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
                 lightScrim = Color.Transparent.toArgb(),
                 darkScrim = Color.Transparent.toArgb()
             ),
+
+
             navigationBarStyle = SystemBarStyle.auto(
                 lightScrim = Color.Transparent.toArgb(),
                 darkScrim = Color.Transparent.toArgb()
@@ -28,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ConnectScreen()
+            AppNavHost()
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.usatov.nanithometask.feature.connect
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.usatov.nanithometask.core.common.TAG
@@ -16,7 +15,9 @@ import com.usatov.nanithometask.domain.connect.SessionState
 import com.usatov.nanithometask.domain.connect.SubscribeConnectStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -26,7 +27,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class ConnectViewModel @Inject constructor(
@@ -40,6 +40,12 @@ class ConnectViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ConnectUiState())
     val state: StateFlow<ConnectUiState> = _state.asStateFlow()
+
+    private val _navigation = MutableSharedFlow<NavCmd>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+    val navigation: SharedFlow<NavCmd> = _navigation
 
     init {
         subscribeUseCase()
@@ -104,7 +110,8 @@ class ConnectViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 status = ConnectUiState.Status.Error,
-                                errorMessage = e.message ?: resourceProvider.getString(R.string.unknown_error)
+                                errorMessage = e.message
+                                    ?: resourceProvider.getString(R.string.unknown_error)
                             )
                         }
                     }
@@ -112,12 +119,13 @@ class ConnectViewModel @Inject constructor(
             }
 
             ConnectEvent.ClickDone -> {
+                tryNavigateToOverview()
             }
         }
     }
 
     private fun applySessionState(state: SessionState) {
-        logger.d(TAG,"applySessionState() state = $state")
+        logger.d(TAG, "applySessionState() state = $state")
         when (state) {
             SessionState.Connecting ->
                 _state.update { it.copy(status = ConnectUiState.Status.Connecting) }
@@ -126,7 +134,9 @@ class ConnectViewModel @Inject constructor(
                 _state.update { it.copy(status = ConnectUiState.Status.Connected) }
 
             is SessionState.Error ->
-                emitError(state.throwable.message ?: resourceProvider.getString(R.string.unknown_error))
+                emitError(
+                    state.throwable.message ?: resourceProvider.getString(R.string.unknown_error)
+                )
 
             is SessionState.Disconnected -> {
                 _state.update { it.copy(status = ConnectUiState.Status.Idle) }
@@ -135,7 +145,7 @@ class ConnectViewModel @Inject constructor(
     }
 
     private fun emitError(msg: String?) {
-        logger.d(TAG,"emitError() = $msg")
+        logger.d(TAG, "emitError() = $msg")
         _state.update {
             it.copy(
                 status = ConnectUiState.Status.Error,
@@ -144,10 +154,16 @@ class ConnectViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        logger.d(TAG,"onCleared()")
-        viewModelScope.launch(io) {
-            disconnectUseCase()
+    private fun tryNavigateToOverview() {
+        if (state.value.status == ConnectUiState.Status.Connected) {
+            _navigation.tryEmit(NavCmd.ToBirthday)
         }
+    }
+
+    override fun onCleared() {
+        logger.d(TAG, "onCleared()")
+//        viewModelScope.launch(io) {
+//            disconnectUseCase()
+//        }
     }
 }

@@ -1,6 +1,5 @@
 package com.usatov.nanithometask.domain.connect
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 sealed class SessionState {

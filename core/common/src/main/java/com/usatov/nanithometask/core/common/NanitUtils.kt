@@ -56,7 +56,11 @@ fun String.formatPort(current: String): String {
         }
     }
 
-    return if (accept) { limited } else { current }
+    return if (accept) {
+        limited
+    } else {
+        current
+    }
 }
 
 fun String.isValidIp() = IP_REGEX.matches(this)

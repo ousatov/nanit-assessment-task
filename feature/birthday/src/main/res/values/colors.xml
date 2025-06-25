@@ -3,4 +3,7 @@
     <color name="bg_fox">#A9DCCF</color>
     <color name="bg_elephant">#FEE7B7</color>
     <color name="bg_pelican">#B9E5EF</color>
+    <color name="bg_fox_dark">#6FC5AF</color>
+    <color name="bg_elephant_dark">#FEBE21</color>
+    <color name="bg_pelican_dark">#8BD3E4</color>
 </resources>

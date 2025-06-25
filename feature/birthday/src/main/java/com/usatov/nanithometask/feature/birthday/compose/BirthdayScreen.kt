@@ -4,103 +4,123 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.usatov.nanithometask.domain.birthday.BirthdayTheme
 import com.usatov.nanithometask.feature.birthday.BirthdayViewModel
 import com.usatov.nanithometask.feature.birthday.R
-import com.usatov.nanithometask.feature.birthday.UiBirthday
 
 @Composable
 fun BirthdayScreen(
     onBack: () -> Unit,
     vm: BirthdayViewModel = hiltViewModel()
 ) {
-    val birthday by vm.uiState.collectAsStateWithLifecycle()
+    val ui by vm.uiState.collectAsStateWithLifecycle()
+    ui ?: return
+    val birthday = ui!!
 
-
-    val bgResId by remember(birthday?.theme) {
-        mutableStateOf(birthday?.theme?.bgResId())
-    }
-    val bgTint by remember(birthday?.theme) {
-        mutableStateOf(birthday?.theme?.tintRes())
+    val bgResId by remember(birthday.theme) {
+        mutableIntStateOf(birthday.theme.bgResId())
     }
 
-    Box(
-        Modifier
+    ConstraintLayout(
+        modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = bgTint?.let { colorResource(it) }
-                    ?: MaterialTheme.colorScheme.background
-            )
+            .background(colorResource(birthday.theme.tintRes()))
     ) {
-        bgResId?.let { resId ->
-            Image(
-                painter = painterResource(resId),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        val (birthdayHeader, btnBack, circleLayer, nanitLogo, overlay) = createRefs()
+        val avatarPadding = Dimens.horizontalPadding
+        val themeColorDark = colorResource(birthday.theme.tintResDark())
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 12.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.Black
-                )
+        StatusBarOverlay(
+            alpha = Dimens.statusBarAlpha,
+            color = Color.Black,
+            modifier = Modifier
+                .constrainAs(overlay) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .fillMaxWidth()
+        )
+
+        BackButton(
+            modifier = Modifier
+                .constrainAs(btnBack) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                }
+                .offset(x = Dimens.backHorizontalMargin, y = Dimens.backVerticalMargin),
+            onClick = onBack
+        )
+
+        BirthdayHeader(
+            birthday,
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(birthdayHeader) {
+                    top.linkTo(parent.top, margin = Dimens.headerTopMargin)
+                    bottom.linkTo(circleLayer.top, margin = Dimens.headerBottomMargin)
+                }
+        )
+
+        AvatarWithCamera(
+            avatarRes = birthday.theme.babyAvatarResId(),
+            avatarDesc = stringResource(R.string.baby_avatar_desc),
+            avatarMaxSize = Dimens.avatarMaxSize,
+            themeColor = themeColorDark,
+            onCameraClick = { /* todo */ },
+            modifier = Modifier
+                .padding(start = avatarPadding, end = avatarPadding)
+                .constrainAs(circleLayer) {
+                    top.linkTo(parent.top, margin = Dimens.avatarOffset)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+        )
+
+        BottomPinnedBg(bgResId = bgResId)
+
+        Image(
+            painter = painterResource(R.drawable.logo_nanit),
+            contentDescription = stringResource(R.string.nanit_logo_desc),
+            modifier = Modifier.constrainAs(nanitLogo) {
+                top.linkTo(circleLayer.bottom, margin = Dimens.nanitLogoTopMargin)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
             }
-
-            birthday?.let { BirthdayCard(it) }
-        }
+        )
     }
 }
 
-@Composable
-private fun BirthdayCard(birthday: UiBirthday) {
-    Text(
-        text = buildString {
-            append(birthday.name)
-            append("\n")
-            append(birthday.ageLabel)
-        },
-        style = MaterialTheme.typography.headlineSmall,
-        color = Color.White
-    )
-}
 
 @DrawableRes
-private fun BirthdayTheme.bgResId(): Int = when (this) {
+private fun BirthdayTheme.bgResId() = when (this) {
     BirthdayTheme.FOX -> R.drawable.bg_fox
     BirthdayTheme.ELEPHANT -> R.drawable.bg_elephant
     BirthdayTheme.PELICAN -> R.drawable.bg_pelican
+}
+
+@DrawableRes
+private fun BirthdayTheme.babyAvatarResId() = when (this) {
+    BirthdayTheme.FOX -> R.drawable.baby_circle_fox
+    BirthdayTheme.ELEPHANT -> R.drawable.baby_circle_elephant
+    BirthdayTheme.PELICAN -> R.drawable.baby_circle_pelican
 }
 
 @ColorRes
@@ -108,4 +128,11 @@ fun BirthdayTheme.tintRes() = when (this) {
     BirthdayTheme.FOX -> R.color.bg_fox
     BirthdayTheme.ELEPHANT -> R.color.bg_elephant
     BirthdayTheme.PELICAN -> R.color.bg_pelican
+}
+
+@ColorRes
+fun BirthdayTheme.tintResDark() = when (this) {
+    BirthdayTheme.FOX -> R.color.bg_fox_dark
+    BirthdayTheme.ELEPHANT -> R.color.bg_elephant_dark
+    BirthdayTheme.PELICAN -> R.color.bg_pelican_dark
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="digit_icons">
+        <item>@drawable/icon_digit_0</item>
+        <item>@drawable/icon_digit_1</item>
+        <item>@drawable/icon_digit_2</item>
+        <item>@drawable/icon_digit_3</item>
+        <item>@drawable/icon_digit_4</item>
+        <item>@drawable/icon_digit_5</item>
+        <item>@drawable/icon_digit_6</item>
+        <item>@drawable/icon_digit_7</item>
+        <item>@drawable/icon_digit_8</item>
+        <item>@drawable/icon_digit_9</item>
+        <item>@drawable/icon_digit_10</item>
+        <item>@drawable/icon_digit_11</item>
+        <item>@drawable/icon_digit_12</item>
+    </array>
+</resources>

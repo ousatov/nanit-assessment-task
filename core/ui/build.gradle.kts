@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.hilt)
 }
 
 android {
@@ -27,26 +25,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain:connect-api"))
-    implementation(project(":data:connect"))
-    implementation(project(":core:di"))
-    implementation(project(":core:common"))
-    implementation(project(":core:navigation"))
-
-    implementation(libs.kotlinx.coroutines.core)
-
     implementation(libs.androidx.core.ktx)
 
-    implementation(libs.hilt.android)
-    implementation(project(":core:ui"))
-    kapt(libs.hilt.compiler)
-    implementation(libs.hilt.nav.compose)
-
     implementation(platform(libs.compose.bom))
+
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.activity.compose)
-    implementation(libs.navigation.compose)
+
     implementation(libs.androidx.lifecycle.runtime.compose)
 }
 

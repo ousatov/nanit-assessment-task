@@ -1,6 +1,8 @@
 package com.usatov.nanithometask.core.di
 
 import android.content.Context
+import com.usatov.nanithometask.core.common.formatting.BabyInfoFormatter
+import com.usatov.nanithometask.core.common.formatting.BabyInfoFormatterImpl
 import com.usatov.nanithometask.core.common.logging.Logger
 import com.usatov.nanithometask.core.common.logging.TimberLogger
 import com.usatov.nanithometask.core.common.resources.AndroidResourceProvider
@@ -25,6 +27,13 @@ object InfrastructureModule {
     fun provideResourceProvider(
         @ApplicationContext context: Context
     ): ResourceProvider = AndroidResourceProvider(context)
+
+
+    @Provides
+    @Singleton
+    fun provideBabyInfoFormatter(
+        resourceProvider: ResourceProvider
+    ): BabyInfoFormatter = BabyInfoFormatterImpl(resourceProvider)
 }
 
 // SIMPLIFIED..

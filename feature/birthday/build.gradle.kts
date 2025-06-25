@@ -40,6 +40,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.constraintlayout)
+    implementation(project(":core:ui"))
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.nav.compose)
 
@@ -49,5 +50,8 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.constraintlayout.compose)
+    implementation(libs.accompanist.systemuicontroller)
+
 }
 

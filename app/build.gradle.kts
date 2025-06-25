@@ -29,11 +29,15 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // just for be able to run optimized release build. in real project it should be signed
+            // with keystore and provided keys in the CI
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -91,4 +95,12 @@ fun getVersionCode(): Int {
 fun getVersionName(): String {
     val v = getVersionConfig()
     return "${v.major}.${v.minor}.${v.bugfix}.${String.format("%03d", v.build)}"
+}
+
+android.applicationVariants.all {
+    outputs.all {
+        val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+        val version = versionName ?: "0.0.0.000"
+        output.outputFileName = "usatov-nanit-test-${name}-$version.apk"
+    }
 }

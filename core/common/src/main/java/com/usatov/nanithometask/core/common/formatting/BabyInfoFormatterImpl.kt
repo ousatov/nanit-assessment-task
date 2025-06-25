@@ -59,9 +59,9 @@ class BabyInfoFormatterImpl(
 
     private fun Long.monthsSince(): Int {
         val then = Calendar.getInstance().apply { timeInMillis = this@monthsSince }
-        val now  = Calendar.getInstance()
+        val now = Calendar.getInstance()
 
-        var months = (now.get(Calendar.YEAR)  - then.get(Calendar.YEAR))  * MONTHS_IN_YEAR +
+        var months = (now.get(Calendar.YEAR) - then.get(Calendar.YEAR)) * MONTHS_IN_YEAR +
                 (now.get(Calendar.MONTH) - then.get(Calendar.MONTH))
 
         if (now.get(Calendar.DAY_OF_MONTH) < then.get(Calendar.DAY_OF_MONTH)) {

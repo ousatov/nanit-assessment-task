@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.usatov.nanithometask.feature.birthday.R
 
+
+// added as in iOS. can be removed.
 @Composable
 fun BackButton(
     onClick: () -> Unit,

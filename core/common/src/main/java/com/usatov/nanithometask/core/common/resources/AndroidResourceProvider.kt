@@ -5,7 +5,6 @@ import android.util.SparseArray
 import androidx.annotation.ArrayRes
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import com.usatov.nanithometask.core.common.R
 
 // SIMPLIFIED. SHOULD BE IN ANOTHER MODULE
 class AndroidResourceProvider(private val context: Context) : ResourceProvider {
@@ -26,7 +25,7 @@ class AndroidResourceProvider(private val context: Context) : ResourceProvider {
 
     override fun getDrawableFromArray(@ArrayRes arrayResId: Int, index: Int): Int {
         val icons = arrayCache[arrayResId] ?: run {
-            val ta   = context.resources.obtainTypedArray(arrayResId)
+            val ta = context.resources.obtainTypedArray(arrayResId)
             val list = IntArray(ta.length()) { ta.getResourceId(it, 0) }
             ta.recycle()
             arrayCache.put(arrayResId, list)

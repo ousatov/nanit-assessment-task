@@ -11,4 +11,7 @@ object Dimens {
 
     val titleFontSize = 28.sp
     val cornerRadiusServerForm = 8.dp
+
+    val serverFormPadding = 16.dp
+    val serverFormCornerRadius = 16.dp
 }

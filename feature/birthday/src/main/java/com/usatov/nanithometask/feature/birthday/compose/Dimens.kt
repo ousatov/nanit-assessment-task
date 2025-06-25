@@ -20,7 +20,7 @@ object Dimens {
     val ageLabelMargin = 14.dp
 
     val backHorizontalMargin = 12.dp
-    val backVerticalMargin = 24.dp
+    val backVerticalMargin = 28.dp
 
     val headerTopMargin = 20.dp
     val headerBottomMargin = 15.dp

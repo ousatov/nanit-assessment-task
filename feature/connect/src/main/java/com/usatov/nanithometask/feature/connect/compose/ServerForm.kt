@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import com.usatov.nanithometask.feature.connect.R
 import com.usatov.nanithometask.feature.connect.ui.NanitColors
 
@@ -39,15 +37,10 @@ fun ServerForm(
 
     Column(
         modifier
-            .background(NanitColors.Card, RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .background(NanitColors.Card, RoundedCornerShape(Dimens.serverFormCornerRadius))
+            .padding(Dimens.serverFormPadding),
+        verticalArrangement = Arrangement.spacedBy(Dimens.serverFormPadding)
     ) {
-        Text(
-            text = stringResource(R.string.hello_nanit_title),
-            color = NanitColors.Purple,
-            style = MaterialTheme.typography.titleMedium
-        )
 
         OutlinedTextField(
             value = TextFieldValue(ip, TextRange(ip.length)),

@@ -2,7 +2,7 @@
 <resources>
     <string name="today_name_is">TODAY %1$s is</string>
 
-<!--    content description-->
+    <!--    content description-->
     <string name="baby_avatar_desc">Baby Avatar</string>
     <string name="change_photo_desc">Change photo button</string>
     <string name="back_desc">Back Button</string>

@@ -20,4 +20,6 @@ dependencies {
 
     // SIMPLIFIED. SHOULD BE IN ANOTHER MODULE
     implementation(libs.timber)
+
+    testImplementation(libs.bundles.unit.test)
 }

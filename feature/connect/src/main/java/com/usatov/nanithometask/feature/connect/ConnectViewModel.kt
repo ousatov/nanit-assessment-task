@@ -8,7 +8,7 @@ import com.usatov.nanithometask.core.common.formatPort
 import com.usatov.nanithometask.core.common.isValidIp
 import com.usatov.nanithometask.core.common.logging.Logger
 import com.usatov.nanithometask.core.common.resources.ResourceProvider
-import com.usatov.nanithometask.core.di.IoDispatcher
+import com.usatov.nanithometask.core.common.IoDispatcher
 import com.usatov.nanithometask.domain.connect.ConnectUseCase
 import com.usatov.nanithometask.domain.connect.DisconnectUseCase
 import com.usatov.nanithometask.domain.connect.SessionState

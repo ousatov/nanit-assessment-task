@@ -17,6 +17,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    compileOnly(libs.javax.inject)
 
     // SIMPLIFIED. SHOULD BE IN ANOTHER MODULE
     implementation(libs.timber)

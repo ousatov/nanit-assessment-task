@@ -22,7 +22,6 @@ android {
 dependencies {
     implementation(project(":domain:connect-api"))
     implementation(project(":core:db"))
-    implementation(project(":core:di"))
     implementation(project(":core:common"))
 
     implementation(libs.kotlinx.coroutines.core)

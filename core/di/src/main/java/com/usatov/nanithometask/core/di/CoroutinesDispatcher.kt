@@ -1,5 +1,6 @@
 package com.usatov.nanithometask.core.di
 
+import com.usatov.nanithometask.core.common.IoDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

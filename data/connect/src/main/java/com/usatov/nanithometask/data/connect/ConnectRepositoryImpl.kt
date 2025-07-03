@@ -1,9 +1,9 @@
 package com.usatov.nanithometask.data.connect
 
+import com.usatov.nanithometask.core.common.IoDispatcher
 import com.usatov.nanithometask.core.common.TAG
 import com.usatov.nanithometask.core.common.logging.Logger
 import com.usatov.nanithometask.core.db.birthday.LocalBirthdayDataSource
-import com.usatov.nanithometask.core.di.IoDispatcher
 import com.usatov.nanithometask.domain.connect.ConnectRepository
 import com.usatov.nanithometask.domain.connect.SessionState
 import kotlinx.coroutines.CoroutineDispatcher

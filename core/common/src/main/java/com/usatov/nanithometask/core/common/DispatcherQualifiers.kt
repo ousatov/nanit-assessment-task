@@ -1,4 +1,4 @@
-package com.usatov.nanithometask.core.di
+package com.usatov.nanithometask.core.common
 
 import javax.inject.Qualifier
 

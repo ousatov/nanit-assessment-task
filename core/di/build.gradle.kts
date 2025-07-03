@@ -20,6 +20,7 @@ android {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:db"))
+    implementation(project(":data:connect"))
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

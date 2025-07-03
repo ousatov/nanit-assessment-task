@@ -28,7 +28,6 @@ android {
 
 dependencies {
     implementation(project(":domain:connect-api"))
-    implementation(project(":data:connect"))
     implementation(project(":core:di"))
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))

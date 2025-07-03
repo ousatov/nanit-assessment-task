@@ -13,6 +13,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,6 +21,7 @@ import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.cancellation.CancellationException
 
 @Singleton
 class ConnectRepositoryImpl @Inject constructor(
@@ -47,17 +49,27 @@ class ConnectRepositoryImpl @Inject constructor(
 
         _state.value = SessionState.Connecting
         socketJob = repoScope.launch {
-            runCatching {
-                socket.subscribe(ip, port)
-                    .withIndex()
-                    .collect { (idx, s) ->
-                        logger.d(TAG, "collect() idx = $idx s = $s")
-                        handleSocketEvent(idx, s)
+            socket.subscribe(ip, port)
+                .withIndex()
+                .onCompletion { cause ->
+                    when (cause) {
+                        null -> {
+                            logger.d(TAG, "Socket flow completed normally")
+                        }
+                        is CancellationException -> {
+                            logger.d(TAG, "Socket subscription cancelled")
+                        }
+
+                        else -> {
+                            logger.e(TAG, "onFailure() e = $cause")
+                            _state.value = SessionState.Error(cause)
+                        }
                     }
-            }.onFailure { e ->
-                logger.e(TAG, "onFailure() e = $e")
-                _state.value = SessionState.Error(e)
-            }
+                }
+                .collect { (idx, s) ->
+                    logger.d(TAG, "collect() idx = $idx s = $s")
+                    handleSocketEvent(idx, s)
+                }
         }.also { job -> job.invokeOnCompletion { socketJob = null } }
     }
 
